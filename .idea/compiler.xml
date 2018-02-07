@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ImproveDigitalCasePlainJava" />
+        <module name="WordCountThread" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ImproveDigitalCasePlainJava" target="1.8" />
+      <module name="WordCountThread" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
