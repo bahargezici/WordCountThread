@@ -9,20 +9,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * JUnit test for {@link WordCountService}
  */
 @ContextConfiguration(classes = {WordCountService.class})
 @ComponentScan
-//@SpringBootTest(classes = {WordCountService.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class WordCountServiceTest {
 
@@ -64,10 +60,7 @@ public class WordCountServiceTest {
 
         Word entry = map.iterator().next();
 
-        System.out.println("key : "+ entry.getWordString());
-        System.out.println("key : "+ entry.getCount());
-
-        assertEquals("Map must be : ", "patik 5", entry.getWordString()+ " "+ entry.getCount());
+        assertEquals("Map must be patik 5 : ", "patik 5", entry.getWordString()+ " "+ entry.getCount());
     }
 
     /**
@@ -75,12 +68,14 @@ public class WordCountServiceTest {
      */
     @Test
     public void testMap() {
-        WordCountService wordCountService = new WordCountService();
         Set<Word> map = wordCountService.process(fileList);
 
-        Word entry = map.iterator().next();
+        List tmp = new ArrayList();
+        map.forEach(k-> tmp.add(k.getCount()));
 
-        assertEquals("Map must be : ", "patik 5", entry.getWordString()+" "+ entry.getCount());
+        Collections.sort(tmp, Collections.reverseOrder());
+
+        assertEquals("Map must be sorted", "[5, 4, 3, 1]", tmp.toString());
     }
 
     /**
