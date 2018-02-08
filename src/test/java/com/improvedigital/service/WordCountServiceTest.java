@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -33,8 +33,8 @@ public class WordCountServiceTest {
 
     @Before
     public void setup() {
-        String filePath1 = "/Users/bahar.gezici/Desktop/t3.txt";
-        String filePath2 = "/Users/bahar.gezici/Desktop/t4.txt";
+        String filePath1 = "./src/test/resources/t3.txt";
+        String filePath2 = "./src/test/resources/t4.txt";
 
         fileList.add(filePath1);
         fileList.add(filePath2);
@@ -59,16 +59,15 @@ public class WordCountServiceTest {
                 }
             }
         };
-        ConcurrentHashMap<Word, Word> map = wordCountService.process(fileList);
-        System.out.println("map.values()"+ map.values());
+        Set<Word> map = wordCountService.process(fileList);
+        System.out.println("map.values()"+ map);
 
-        Map.Entry<Word,Word> entry = map.entrySet().iterator().next();
-        Word key = entry.getKey();
+        Word entry = map.iterator().next();
 
-        System.out.println("key : "+ key.getWordString());
-        System.out.println("key : "+ key.getCount());
+        System.out.println("key : "+ entry.getWordString());
+        System.out.println("key : "+ entry.getCount());
 
-        assertEquals("Map must be : ", "salim 3", key.getWordString()+ " "+ key.getCount());
+        assertEquals("Map must be : ", "patik 5", entry.getWordString()+ " "+ entry.getCount());
     }
 
     /**
@@ -77,12 +76,11 @@ public class WordCountServiceTest {
     @Test
     public void testMap() {
         WordCountService wordCountService = new WordCountService();
-        ConcurrentHashMap<Word, Word> map = wordCountService.process(fileList);
+        Set<Word> map = wordCountService.process(fileList);
 
-        Map.Entry<Word,Word> entry = map.entrySet().iterator().next();
-        Word key = entry.getKey();
+        Word entry = map.iterator().next();
 
-        assertEquals("Map must be : ", "salim 3", key.getWordString()+" "+ key.getCount());
+        assertEquals("Map must be : ", "patik 5", entry.getWordString()+" "+ entry.getCount());
     }
 
     /**

@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -15,16 +16,17 @@ import java.util.stream.Stream;
  */
 public class WordCountService {
 
-    public ConcurrentHashMap<Word, Word> process(List<String> fileList) {
+    public Set<Word> process(List<String> fileList) {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         ConcurrentHashMap<Word, Word> idToWordSortedMap = new ConcurrentHashMap<Word, Word>();
         try {
             processFilesInParallel(fileList, idToWordSortedMap, executor);
 
-            Stream<Word> sortedStream = idToWordSortedMap.keySet().stream().sorted(((a, b) -> a.getCount() > b.getCount() ? -1 : 1));
+            TreeSet<Word> sortedStream = idToWordSortedMap.values().stream().collect(Collectors.toCollection(() -> new TreeSet<Word>((a, b) -> a.getCount() > b.getCount() ? -1 : 1)));
+
             Future future = executor.submit(() -> sortedStream.forEach((k) -> System.out.println(k.toString())));
             future.get(1, TimeUnit.MINUTES);
-            return idToWordSortedMap;
+            return sortedStream;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
