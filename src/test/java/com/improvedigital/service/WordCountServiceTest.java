@@ -12,8 +12,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -21,32 +25,33 @@ import static org.junit.Assert.assertNotNull;
  */
 @ContextConfiguration(classes = {WordCountService.class})
 @ComponentScan
-@SpringBootTest(classes = {WordCountService.class})
+//@SpringBootTest(classes = {WordCountService.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class WordCountServiceTest {
 
-    static String filePath1 = "/Users/bahar.gezici/Desktop/t3.txt";
-    static String filePath2 = "/Users/bahar.gezici/Desktop/t4.txt";
+    List<String> fileList = new ArrayList<String>();
 
-    static List<String> fileList = new ArrayList<String>();
+    @Autowired
+    private WordCountService wordCountService;
 
-    static {
+    @Before
+    public void setup() {
+        String filePath1 = "/Users/bahar.gezici/Desktop/t3.txt";
+        String filePath2 = "/Users/bahar.gezici/Desktop/t4.txt";
+
         fileList.add(filePath1);
         fileList.add(filePath2);
     }
 
-//    public static void main(String[] args) {
-//        testThreading();
-//    }
-
-
-    @Before
+    /**
+     * Test for Threads
+     */
+    @Test
     public void testThreading() {
         WordCountService wordCountService = new WordCountService() {
             @Override
             protected void putMap(ConcurrentHashMap<Word, Word> map, File file, String wordInFile) throws InterruptedException {
                 if (map.containsKey(new Word(wordInFile))) {
-
                     incrementExistingWord(map, file, wordInFile);
                 } else {
                     Word word = new Word(wordInFile, file.getName());
@@ -57,11 +62,26 @@ public class WordCountServiceTest {
                 }
             }
         };
-        wordCountService.process(fileList);
+        ConcurrentHashMap<Word, Word> map = wordCountService.process(fileList);
+        System.out.println("map.values()"+ map.values());
+
+        Map.Entry<Word,Word> entry = map.entrySet().iterator().next();
+        Word key = entry.getKey();
+
+        System.out.println("key : "+ key.getWordString());
+        System.out.println("key : "+ key.getCount());
+
+        assertEquals("Map must be : ", "salim 3", key.getWordString()+" "+ key.getCount());
     }
 
-    @Autowired
-    private WordCountService wordCountService;
+    /**
+     * Test for Map
+     */
+    @Test
+    public void testMap() {
+        WordCountService wordCountService = new WordCountService();
+        ConcurrentHashMap<Word, Word> map = wordCountService.process(fileList);
+    }
 
     /**
      * Test constructor of {@link WordCountService}

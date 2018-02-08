@@ -15,18 +15,16 @@ import java.util.stream.Stream;
  */
 public class WordCountService {
 
-    public Stream<Word> process(List<String> fileList) {
+    public ConcurrentHashMap<Word, Word> process(List<String> fileList) {
         ExecutorService executor = Executors.newFixedThreadPool(10);
-
         ConcurrentHashMap<Word, Word> idToWordSortedMap = new ConcurrentHashMap<Word, Word>();
-
         try {
             processFilesInParallel(fileList, idToWordSortedMap, executor);
 
             Stream<Word> sortedStream = idToWordSortedMap.keySet().stream().sorted(((a, b) -> a.getCount() > b.getCount() ? -1 : 1));
             Future future = executor.submit(() -> sortedStream.forEach((k) -> System.out.println(k.toString())));
             future.get(1, TimeUnit.MINUTES);
-            return sortedStream;
+            return idToWordSortedMap;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
