@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,9 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -71,7 +68,7 @@ public class WordCountServiceTest {
         System.out.println("key : "+ key.getWordString());
         System.out.println("key : "+ key.getCount());
 
-        assertEquals("Map must be : ", "salim 3", key.getWordString()+" "+ key.getCount());
+        assertEquals("Map must be : ", "salim 3", key.getWordString()+ " "+ key.getCount());
     }
 
     /**
@@ -81,6 +78,11 @@ public class WordCountServiceTest {
     public void testMap() {
         WordCountService wordCountService = new WordCountService();
         ConcurrentHashMap<Word, Word> map = wordCountService.process(fileList);
+
+        Map.Entry<Word,Word> entry = map.entrySet().iterator().next();
+        Word key = entry.getKey();
+
+        assertEquals("Map must be : ", "salim 3", key.getWordString()+" "+ key.getCount());
     }
 
     /**
