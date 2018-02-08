@@ -3,6 +3,8 @@ package com.improvedigital.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +23,7 @@ import static org.junit.Assert.*;
 @ComponentScan
 @RunWith(SpringJUnit4ClassRunner.class)
 public class WordCountServiceTest {
-
+    private static final Logger LOG = LoggerFactory.getLogger(WordCountServiceTest.class);
     List<String> fileList = new ArrayList<String>();
 
     @Autowired
@@ -56,11 +58,10 @@ public class WordCountServiceTest {
             }
         };
         Set<Word> map = wordCountService.process(fileList);
-        System.out.println("map.values()"+ map);
-
         Word entry = map.iterator().next();
+        LOG.info("map: {}",map);
 
-        assertEquals("Map must be patik 5 : ", "patik 5", entry.getWordString()+ " "+ entry.getCount());
+        assertEquals("Map must be patik 5 : ", "patik 5", entry.getWordString()+" "+ entry.getCount());
     }
 
     /**
@@ -69,13 +70,12 @@ public class WordCountServiceTest {
     @Test
     public void testMap() {
         Set<Word> map = wordCountService.process(fileList);
-
         List tmp = new ArrayList();
-        map.forEach(k-> tmp.add(k.getCount()));
-
+        map.forEach(k -> tmp.add(k.getCount()));
         Collections.sort(tmp, Collections.reverseOrder());
+        LOG.info("map: {}", tmp.toString());
 
-        assertEquals("Map must be sorted", "[5, 4, 3, 1]", tmp.toString());
+        assertEquals("Map must be sorted","[5, 4, 3, 1]", tmp.toString());
     }
 
     /**
