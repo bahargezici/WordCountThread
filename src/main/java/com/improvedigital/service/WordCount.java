@@ -15,8 +15,8 @@ public class WordCount {
 
     public static void main(String args[]) {
         LOG.trace("Main Class for Testing WordCountService");
-        String filePath1 = "./src/test/resources/t3.txt";
-        String filePath2 = "./src/test/resources/t4.txt";
+        String filePath1 = "./src/test/resources/data/t1.txt";
+        String filePath2 = "./src/test/resources/data/t2.txt";
 
         WordCountService ws = new WordCountService();
         LOG.trace("WordCountService has created {}", ws);

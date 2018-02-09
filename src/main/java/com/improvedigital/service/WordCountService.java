@@ -2,7 +2,6 @@ package com.improvedigital.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -51,12 +50,13 @@ public class WordCountService {
      */
     public void getWordCount(String filePath, ConcurrentHashMap<Word, Word> map) {
         LOG.debug("Word count process is starting : filePath = {} map = {}", filePath, map.toString());
+        Scanner in = null;
         try {
             File file = new File(filePath);
             if (!file.exists()) {
                 return;
             }
-            Scanner in = new Scanner(file);
+            in = new Scanner(file);
             LOG.debug("Scanning the file row by row: {} ", file.getName());
             while (in.hasNext()) {
                 String wordInFile = in.next().trim().replaceAll("[^a-zA-Z ]", "").toLowerCase();
@@ -67,6 +67,9 @@ public class WordCountService {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        finally {
+            in.close();
         }
     }
 
